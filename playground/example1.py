@@ -25,7 +25,7 @@ async def run_single_prompt():
 
     # 4. Trigger the run. Model parsing: `<slug>/<version-id-on-provider>`
     response = await runner.acall(
-        model="groq/openai/gpt-oss-120b",
+        model="groq/openai/gpt-oss-20b",
         messages=[
             {"role": "system", "content": "You are a helpful assistant."},
             {"role": "user", "content": "How far is the moon?"},

@@ -17,42 +17,52 @@ It is built as the core execution engine for any multi-agent system, strictly ad
 ### Installation
 Ensure you are using `Python >= 3.12`. Install dependencies using [uv](https://github.com/astral-sh/uv) or pip:
 ```bash
-uv sync  # or `pip install -e .`
+uv add agent-llm-service 
+
+# or you can also use with pip
+# pip install agent-llm-service
 ```
 
 ### Quick Usage
 
 ```python
-from agent_llm_service import (
-    LlmProviderConfig, 
-    RawLlmProvider, 
-    LlmRunner
-)
+from agent_llm_service import LlmProviderConfig, RawLlmProvider, LlmRunner
+from dotenv import load_dotenv
 
-# Configure the provider (e.g., Groq via OpenAI schema)
-config = LlmProviderConfig(
-    name="Groq",
-    slug="groq",
-    api_key_env_var="GROQ_API_KEY",
-    base_url="https://api.groq.com/openai/v1",
-    enabled=True
-)
+load_dotenv()  # Load environment variables from .env file
 
-provider = RawLlmProvider(config=[config])
-runner = LlmRunner(provider=provider)
 
-# Async LLM Run
-response = await runner.acall(
-    model="groq/llama3-8b-8192",
-    messages=[{"role": "user", "content": "What is the capital of France?"}],
-)
-print(response.content)
+async def main():
+    # Configure the provider (e.g., Groq via OpenAI schema)
+    config = LlmProviderConfig(
+        name="Groq",
+        slug="groq",
+        api_key_env_var="GROQ_API_KEY",
+        base_url="https://api.groq.com/openai/v1",
+        enabled=True,
+    )
+
+    provider = RawLlmProvider(config=[config])
+    runner = LlmRunner(provider=provider)
+
+    # Async LLM Run
+    response = await runner.acall(
+        model="groq/openai/gpt-oss-20b",
+        messages=[{"role": "user", "content": "What is the capital of France?"}],
+    )
+    print(response.content)
+
+
+if __name__ == "__main__":
+    import asyncio
+
+    asyncio.run(main())
 ```
 
 ## Documentation
 _**Note:** If not shown directly on PyPi package, try seeing in [Github repo: SurajAiri/Agent-LLM-Service](http://github.com/SurajAiri/agent-llm-service)_
-- **[Architecture Review](docs/architecture.md):** Deep dive into the modular structure, object domains, and the pool failover strategies.
-- **[How to Use (Examples & Tool Calling)](docs/how-to-use.md):** Extensive recipes on handling single LLM runs, pools, and tool registry integrations.
+- **[Architecture Review](https://github.com/surajairi/agent-llm-service/docs/architecture.md):** Deep dive into the modular structure, object domains, and the pool failover strategies.
+- **[How to Use (Examples & Tool Calling)](https://github.com/surajairi/agent-llm-service/docs/how-to-use.md):** Extensive recipes on handling single LLM runs, pools, and tool registry integrations.
 
 ## Contributing
 1. Fork the repository and create an issue.

@@ -4,12 +4,13 @@ build-backend = "setuptools.build_meta"
 
 [project]
 name = "agent-llm-service"
-version = "0.0.2"
+version = "0.0.3"
 description = "A GenAI project built with LangChain and modern Python tools"
 readme = "README.md"
 authors = [{ name = "Suraj Airi", email = "surajairi.ml@gmail.com" }]
 license = { text = "MIT license" }
 requires-python = ">=3.12"
+keywords = ["ai", "agent", "tools", "executor", "llm"]
 dependencies = [
     "dotenv>=0.9.9",
     "httpx>=0.28.1",
@@ -18,8 +19,14 @@ dependencies = [
 ]
 
 [dependency-groups]
-dev = ["ruff>=0.12.1"]
+dev = [
+    "ruff>=0.12.1",
+]
 
+[project.urls]
+Homepage = "https://github.com/surajairi/agent-llm-service"
+Repository = "https://github.com/surajairi/agent-llm-service"
+Issues = "https://github.com/surajairi/agent-llm-service/issues"
 
 [tool.setuptools.packages.find]
 where = ["src"]
