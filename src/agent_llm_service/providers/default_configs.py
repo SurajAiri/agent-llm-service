@@ -1,4 +1,4 @@
-from agent_llm_service.models.llm_provider_config import LlmProviderConfig
+from agent_llm_service.schemas.config import LlmProviderConfig
 
 default_configs: list[LlmProviderConfig] = [
     LlmProviderConfig(

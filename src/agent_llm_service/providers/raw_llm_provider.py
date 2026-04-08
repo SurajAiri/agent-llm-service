@@ -5,7 +5,7 @@ import re
 import httpx
 from loguru import logger
 
-from agent_llm_service.models.llm_provider_config import LlmProviderConfig
+from agent_llm_service.schemas.config import LlmProviderConfig
 
 from .base import BaseLlmProvider, LlmResponse, ToolCallRequest
 
@@ -14,9 +14,7 @@ class RawLlmProvider(BaseLlmProvider):
     async def get_available_models(self, slug: str) -> dict:
         """Return a dictionary of available models."""
         config = self._get_provider_config(slug)
-        async with httpx.AsyncClient(
-            headers={"Authorization": f"Bearer {config.api_key}"}
-        ) as client:
+        async with httpx.AsyncClient(headers={"Authorization": f"Bearer {config.api_key}"}) as client:
             response = await client.get(f"{config.base_url}/models")
             response.raise_for_status()
             return response.json()
@@ -63,18 +61,14 @@ class RawLlmProvider(BaseLlmProvider):
                 )
                 response.raise_for_status()
                 data = response.json()
-                logger.debug(
-                    f"Raw response from LLM provider {model}: {json.dumps(data)}"
-                )
+                logger.debug(f"Raw response from LLM provider {model}: {json.dumps(data)}")
                 return self._parse_response(data)
 
         except httpx.HTTPStatusError as e:
             logger.error(
                 f"HTTP error while calling LLM provider {model}: {e.response.status_code} - {e.response.text}"
             )
-            raise RuntimeError(
-                f"LLM provider returned HTTP error {e.response.status_code}"
-            ) from e
+            raise RuntimeError(f"LLM provider returned HTTP error {e.response.status_code}") from e
         except Exception as e:
             logger.exception(f"Error while calling LLM provider {model}: {str(e)}")
             raise RuntimeError(f"Error calling LLM provider: {str(e)}") from e
@@ -97,10 +91,7 @@ class RawLlmProvider(BaseLlmProvider):
             if "<think>" in content and "</think>" in content:
                 reasoning = content.split("<think>")[1].split("</think>")[0].strip()
 
-                content = (
-                    re.sub(r"<think>.*?</think>", "", content, flags=re.DOTALL).strip()
-                    or None
-                )
+                content = re.sub(r"<think>.*?</think>", "", content, flags=re.DOTALL).strip() or None
 
         # --- Tool calls ---
         tool_calls: list[ToolCallRequest] = []
@@ -114,9 +105,7 @@ class RawLlmProvider(BaseLlmProvider):
                 # Arguments come as a JSON string from the API
                 raw_args = func.get("arguments", "{}")
                 try:
-                    arguments = (
-                        json.loads(raw_args) if isinstance(raw_args, str) else raw_args
-                    )
+                    arguments = json.loads(raw_args) if isinstance(raw_args, str) else raw_args
                 except (json.JSONDecodeError, TypeError):
                     logger.warning(
                         "Failed to parse tool-call arguments for {}: {}",

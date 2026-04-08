@@ -3,7 +3,7 @@ from typing import Any
 
 from pydantic import BaseModel, Field
 
-from agent_llm_service.models.llm_provider_config import LlmProviderConfig
+from agent_llm_service.schemas.config import LlmProviderConfig
 
 
 class ToolCallRequest(BaseModel):

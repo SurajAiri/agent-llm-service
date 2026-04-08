@@ -5,7 +5,7 @@ from typing import Any
 from loguru import logger
 from pydantic import BaseModel
 
-from agent_llm_service.provider.llm.base import BaseLlmProvider, LlmResponse
+from agent_llm_service.providers.base import BaseLlmProvider, LlmResponse
 
 
 class LlmRunner(BaseModel):
