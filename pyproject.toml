@@ -4,7 +4,7 @@ build-backend = "setuptools.build_meta"
 
 [project]
 name = "agent-llm-service"
-version = "0.0.3"
+version = "0.0.4"
 description = "A GenAI project built with LangChain and modern Python tools"
 readme = "README.md"
 authors = [{ name = "Suraj Airi", email = "surajairi.ml@gmail.com" }]
@@ -20,6 +20,7 @@ dependencies = [
 
 [dependency-groups]
 dev = [
+    "mkdocs-material>=9.7.6",
     "ruff>=0.12.1",
 ]
 

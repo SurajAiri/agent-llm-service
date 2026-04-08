@@ -1,0 +1,15 @@
+site_name: Agent LLM Service
+repo_url: https://github.com/surajairi/agent-llm-service
+theme:
+  name: material
+  features:
+    - navigation.tabs
+    - navigation.indexes
+    - search.suggest
+    - search.highlight
+
+nav:
+  - Home: index.md
+  - How to Use: how-to-use.md
+  - Architecture: architecture.md
+  - In-Depth Guide: in-depth-guide.md
