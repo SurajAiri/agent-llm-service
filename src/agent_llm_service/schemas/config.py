@@ -3,6 +3,10 @@ import os
 from loguru import logger
 from pydantic import BaseModel, Field
 
+# note: here is is_custom & base_url that are useful
+# if you are using litellm based provider (which is not implemented yet)
+# but for custom platforms and RawLlmProvider, you have to specify the base_url
+
 
 class LlmProviderConfig(BaseModel):
     name: str

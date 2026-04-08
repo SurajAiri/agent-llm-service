@@ -31,7 +31,7 @@ async def run_pool():
         provider=provider,
         fallback_models=[
             "groq/llama3-70b-8192",  # Try first
-            # "groq/openai/gpt-oss-120b",  # Fallback to faster, lower-tier groq
+            "groq/openai/gpt-oss-120b",  # Fallback to faster, lower-tier groq
             "gemini/gemini-3.1-flash-lite-preview",  # Failover completely to Gemini
         ],
         failure_threshold=3,  # Switch models after 3 consecutive failures
