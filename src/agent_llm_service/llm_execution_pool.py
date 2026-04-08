@@ -18,14 +18,14 @@ class LlmExecutionPool(BaseModel):
 
     _mdl_idx: int = PrivateAttr(default=-1)
     _model_failures: dict[str, int] = PrivateAttr(default_factory=dict)
-    cooldown_models: dict[str, float] = PrivateAttr(
+    _cooldown_models: dict[str, float] = PrivateAttr(
         default_factory=dict
     )  # model -> expires_at, inf = permanent
 
     # ── Cooldown management ───────────────────────────────────────────────────
 
     def _is_on_cooldown(self, model: str) -> bool:
-        expires_at = self.cooldown_models.get(model)
+        expires_at = self._cooldown_models.get(model)
         if expires_at is None:
             return False
         if expires_at == float("inf"):
@@ -33,13 +33,13 @@ class LlmExecutionPool(BaseModel):
         if time.monotonic() < expires_at:
             return True
         # cooldown expired, clean up
-        del self.cooldown_models[model]
+        del self._cooldown_models[model]
         self._model_failures.pop(model, None)
         return False
 
     def _put_on_cooldown(self, model: str, duration: float) -> None:
         expires_at = float("inf") if duration == float("inf") else time.monotonic() + duration
-        self.cooldown_models[model] = expires_at
+        self._cooldown_models[model] = expires_at
         label = "permanent" if duration == float("inf") else f"{duration:.0f}s"
         logger.warning(f"[LLMRunner] Model {model} put on cooldown ({label})")
 

@@ -2,6 +2,7 @@ import asyncio
 import random
 from typing import Any
 
+from loguru import logger
 from pydantic import BaseModel
 
 from agent_llm_service.provider.llm.base import BaseLlmProvider, LlmResponse
@@ -51,12 +52,33 @@ class LlmRunner(BaseModel):
                 )
             except Exception as e:
                 error_type = self._classify_error(e)
-                print(f"Error calling model {model} ({error_type}): {e}")
+                logger.error(f"Error calling model {model} ({error_type}): {e}")
                 if error_type in ("unauthorized", "non_recoverable"):
                     raise
                 if error_type in ("rate_limit", "timeout"):
                     delay = self._get_retry_delay(attempt, base_delay)
-                    print(f"Retrying after {delay:.1f} seconds...")
+                    logger.warning(f"Retrying after {delay:.1f} seconds...")
                     await asyncio.sleep(delay)
 
         raise RuntimeError(f"Failed to call model {model} after {max_retries} attempts.")
+
+    def call(
+        self,
+        model: str,
+        messages: list[dict[str, Any]],
+        tools: list[dict[str, Any]] | None = None,
+        max_tokens: int | None = None,
+        temperature: float = 0.7,
+        timeout: int | None = None,
+    ) -> LlmResponse:
+        """Synchronous wrapper around acall."""
+        return asyncio.run(
+            self.acall(
+                model=model,
+                messages=messages,
+                tools=tools,
+                max_tokens=max_tokens,
+                temperature=temperature,
+                timeout=timeout,
+            )
+        )

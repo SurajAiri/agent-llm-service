@@ -1,4 +1,4 @@
-from abc import abstractmethod
+from abc import ABC, abstractmethod
 from typing import Any
 
 from pydantic import BaseModel, Field
@@ -27,7 +27,7 @@ class LlmResponse(BaseModel):
         return len(self.tool_calls) > 0
 
 
-class BaseLlmProvider(BaseModel):
+class BaseLlmProvider(BaseModel, ABC):
     config: list[LlmProviderConfig]
 
     def _get_provider_config(self, slug: str) -> LlmProviderConfig:
@@ -41,9 +41,7 @@ class BaseLlmProvider(BaseModel):
         """Separate slug and model name from a string in <slug>/<model_name> format."""
         parts = model.split("/")
         if len(parts) < 2:
-            raise ValueError(
-                f"Model name must be in <slug>/<model_name> format, got: {model}"
-            )
+            raise ValueError(f"Model name must be in <slug>/<model_name> format, got: {model}")
         return parts[0], "/".join(parts[1:])
 
     def add_provider_config(self, provider_config: LlmProviderConfig):

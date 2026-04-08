@@ -1,7 +1,8 @@
 """
-core/tools/base_tool.py
+agent_llm_service/tools/base_tool.py
 Abstract base for all agent tools.
 """
+
 from __future__ import annotations
 
 from abc import ABC, abstractmethod
@@ -12,8 +13,9 @@ from pydantic import BaseModel
 
 class ToolResult(BaseModel):
     """Standard result returned by every tool."""
+
     success: bool
-    output: str           # always a string for LLM consumption
+    output: str  # always a string for LLM consumption
     error: str | None = None
     metadata: dict = {}
 

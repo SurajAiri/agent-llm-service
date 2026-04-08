@@ -1,5 +1,5 @@
 """
-core/tools/registry.py
+agent_llm_service/tools/registry.py
 Tool registry — maps tool names to instances, dispatches calls.
 """
 
@@ -54,9 +54,7 @@ class ToolRegistry:
             logger.debug("Dispatching tool '{}' | args={}", tool_name, arguments)
             result = await tool.execute(**arguments)
             if result.success:
-                logger.debug(
-                    "Tool '{}' succeeded | output_len={}", tool_name, len(result.output)
-                )
+                logger.debug("Tool '{}' succeeded | output_len={}", tool_name, len(result.output))
             else:
                 logger.warning("Tool '{}' failed | error={}", tool_name, result.error)
             return result
