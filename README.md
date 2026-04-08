@@ -1,4 +1,4 @@
-# Agent LLM Service
+# [Agent LLM Service](http://github.com/SurajAiri/agent-llm-service)
 
 **Agent LLM Service** is a robust, clean, and extensible Python library designed for executing LLM requests across multiple language models (e.g., OpenAI, Groq, Gemini). It offers reliable fallback mechanics, model round-robins, API rate-limit management, built-in tool/function-calling structures, and exponential backoff retry logic.
 
@@ -50,7 +50,7 @@ print(response.content)
 ```
 
 ## Documentation
-
+_**Note:** If not shown directly on PyPi package, try seeing in [Github repo: SurajAiri/Agent-LLM-Service](http://github.com/SurajAiri/agent-llm-service)_
 - **[Architecture Review](docs/architecture.md):** Deep dive into the modular structure, object domains, and the pool failover strategies.
 - **[How to Use (Examples & Tool Calling)](docs/how-to-use.md):** Extensive recipes on handling single LLM runs, pools, and tool registry integrations.
 
