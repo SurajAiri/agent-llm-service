@@ -54,12 +54,13 @@ class LlmRunner(BaseModel):
                 error_type = self._classify_error(e)
                 logger.error(f"Error calling model {model} ({error_type}): {e}")
                 if error_type in ("unauthorized", "non_recoverable"):
+                    logger.error("Encountered non-recoverable error. Aborting retries.")
                     raise
                 if error_type in ("rate_limit", "timeout"):
                     delay = self._get_retry_delay(attempt, base_delay)
                     logger.warning(f"Retrying after {delay:.1f} seconds...")
                     await asyncio.sleep(delay)
-
+        logger.critical(f"Exceeded maximum retries ({max_retries}) for model {model}.")
         raise RuntimeError(f"Failed to call model {model} after {max_retries} attempts.")
 
     def call(

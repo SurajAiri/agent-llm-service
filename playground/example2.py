@@ -1,8 +1,8 @@
 import asyncio
 
-from agent_llm_service import LlmExecutionPool, LlmProviderConfig, RawLlmProvider
-
 from dotenv import load_dotenv
+
+from agent_llm_service import LlmExecutionPool, LlmProviderConfig, RawLlmProvider
 
 load_dotenv()
 
@@ -16,27 +16,23 @@ async def run_pool():
         base_url="https://api.groq.com/openai/v1",
         enabled=True,
     )
-    # gemini_config = LlmProviderConfig(
-    #     name="Gemini Config",
-    #     slug="gemini",
-    #     api_key_env_var="GEMINI_API_KEY",
-    #     base_url="https://generativelanguage.googleapis.com/v1beta/openai",
-    #     enabled=True,
-    # )
-
-    provider = RawLlmProvider(
-        config=[
-            groq_config,
-        ]
+    gemini_config = LlmProviderConfig(
+        name="Gemini Config",
+        slug="gemini",
+        api_key_env_var="GEMINI_API_KEY",
+        base_url="https://generativelanguage.googleapis.com/v1beta/openai",
+        enabled=True,
     )
+
+    provider = RawLlmProvider(config=[groq_config, gemini_config])
 
     # Setup Pool with round-robin fallbacks
     pool = LlmExecutionPool(
         provider=provider,
         fallback_models=[
             "groq/llama3-70b-8192",  # Try first
-            "groq/openai/gpt-oss-120b",  # Fallback to faster, lower-tier groq
-            # "gemini/gemini-3.1-flash-lite-preview",  # Failover completely to Gemini
+            # "groq/openai/gpt-oss-120b",  # Fallback to faster, lower-tier groq
+            "gemini/gemini-3.1-flash-lite-preview",  # Failover completely to Gemini
         ],
         failure_threshold=3,  # Switch models after 3 consecutive failures
         cooldown_duration=60.0,  # Put dead model on cooldown for 60 seconds
