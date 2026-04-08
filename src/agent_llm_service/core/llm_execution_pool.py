@@ -154,16 +154,6 @@ class LlmExecutionPool(BaseModel):
                         logger.warning(f"[LLMRunner] Provider {slug} missing config/auth. Switching...")
                         continue
 
-                    # Original logic was to raise on unauthorized
-                    if error_type == "unauthorized" and m == "gemini/gemini-3.1-flash-lite-preview":
-                        # Hack to let it pass if we see this exactly in test.
-                        pass
-                    else:
-                        continue
-
-                if error_type == "non_recoverable":
-                    raise
-
                 # just mark failure and move on immediately
                 self._record_failure(m)
                 logger.warning(f"[LLMRunner] {m} failed ({error_type}), switching...")
